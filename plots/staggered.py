@@ -1,8 +1,8 @@
 import numpy as np
 import numpy.testing as npt
-import matplotlib.pyplot as plt
 from PIL import ImageColor
 
+# Colorblind friendly colors as hex and rgb
 colors_hex = [
     "55f068",
     "4c9cf0",
@@ -17,12 +17,22 @@ colors_hex = [
 colors_rgb = [
     tuple(np.array(ImageColor.getcolor(f"#{c}", "RGB")) / 256) for c in colors_hex
 ]
+
+# Useful individual colors
 white = (1, 1, 1)
 black = (0, 0, 0)
-transparent = None
-c0 = colors_rgb[0]
-c1 = colors_rgb[1]
+green = colors_rgb[0]
+blue = colors_rgb[1]
+red = colors_rgb[2]
+purple = colors_rgb[3]
+brown = colors_rgb[4]
+pink = colors_rgb[5]
+silver = colors_rgb[6]
+gold = colors_rgb[7]
+cyan = colors_rgb[8]
 
+# Global defaults. Note make sure to copy all_x and all_y
+transparent = None
 bottom = 0
 global_squash_factor = 1.0
 all_x = np.array([[0, 0, 0], [1, 1, 1], [2, 2, 2]]).ravel()
@@ -159,9 +169,6 @@ def test_staggered():
     check_equal(x0, y0, z_bottom0, z_top0, x1, y1, z_bottom1, z_top1, level)
 
 
-test_staggered()
-
-
 def manhattan_distance_comparison(
     distance: int, func, level: int, squash_factor=global_squash_factor
 ):
@@ -249,62 +256,12 @@ def test_manhattan():
 
     check_equal(x0, y0, z_bottom0, z_top0, x1, y1, z_bottom1, z_top1, level)
 
-    x0, y0, z_bottom0, z_top0 = manhattan_distance_greater_equal(distance, level, squash)
+    x0, y0, z_bottom0, z_top0 = manhattan_distance_greater_equal(
+        distance, level, squash
+    )
     x1 = np.array([0, 1, 1, 2, 2, 2])
     y1 = np.array([2, 1, 2, 0, 1, 2])
     z_bottom1 = np.full_like(x1, bottom)
     z_top1 = np.array([3, 3, 4, 3, 4, 5])
 
     check_equal(x0, y0, z_bottom0, z_top0, x1, y1, z_bottom1, z_top1, level)
-
-
-test_manhattan()
-
-
-# Importing mayavi is very slow
-# from mayavi import mlab
-# fig = mlab.figure(bgcolor=white, size=(500, 500))
-# # fig = mlab.figure()
-
-# x_0 = np.array([[0, 0, 0], [1, 1, 1], [2, 2, 2]]).ravel()
-# y_0 = np.array([[0, 1, 2], [0, 1, 2], [0, 1, 2]]).ravel()
-# z_bottom_0 = np.zeros_like(x_0)
-# z_top_0 = np.array([[0.5, 1, 1], [1, 1, 1], [1, 1, 1]]).ravel()
-
-# x_1 = np.array([0, 1, 1, 2, 2, 2])
-# y_1 = np.array([2, 1, 2, 0, 1, 2])
-# z_bottom_1 = np.array([1, 1, 1, 1, 1, 1])
-# z_top_1 = np.array([0.5, 0.5, 1, 0.5, 1, 1.5])
-
-# bar0 = mlab.barchart(x_0, y_0, z_bottom_0, z_top_0, color=c0, figure=fig)
-# bar1 = mlab.barchart(x_1, y_1, z_bottom_1, z_top_1, color=c1, figure=fig)
-
-# set_line_width(bar0)
-# set_line_width(bar1)
-
-# mlab.view(azimuth=-135, elevation=60, distance=15)
-
-# # mlab.savefig("blah.png", size=(400,400))
-# # mlab.show()
-
-# mlab.close()
-
-
-def set_matplotlib_3d(ax, i, j):
-    ax.view_init(30, -135)
-    ax.set_xticklabels([])
-    ax.set_yticklabels([])
-    ax.set_zticklabels([])
-    ax.set_xticks([])
-    ax.set_yticks([])
-    ax.set_title(f"i={i}, j={j}")
-
-
-# for i in range(4):
-#     for j in range(i, 5):
-#         x, y, z_bottom, z_top = staggered_heigh_from(i, j)
-#         fig = plt.figure()
-#         ax = fig.add_subplot(111, projection='3d')
-#         ax.bar3d(x, y, z_bottom, 1,1, z_top-z_bottom,shade=True,color=c0)
-#         set_matplotlib_3d(ax,i,j)
-#         plt.show()
