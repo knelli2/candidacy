@@ -16,11 +16,19 @@ def set_scene():
     mlab.view(azimuth=-135, elevation=65, distance=10, focalpoint=focalpoint)
 
 
-def save(image_name: str):
+def start(filename: str):
+    print(f"Rendering {filename} ... ", end="")
+
+    return mlab.figure(bgcolor=white)
+
+
+def save(image_name: str, do_print=True):
     if not image_name.endswith(".png"):
         image_name += ".png"
     mlab.options.offscreen = True
     mlab.savefig(os.path.join(image_dir, image_name), size=image_size)
+    if do_print:
+        print("done")
 
 
 def save_close(image_name: str):
@@ -43,17 +51,16 @@ def test_off_screen_render():
 
     bar = mlab.barchart(x, y, z_bottom, z_top, color=green, figure=fig)
 
-    save("blah")
+    save("blah", do_print=False)
 
     mlab.close()
     os.remove(os.path.join(image_dir, "blah.png"))
 
 
-def sync_async_frame_1_and_2(name: str, height: int, color: str):
-    filename = f"{name}_{height+1}"
-    print(f"Rendering {filename}...")
+def sync_async_frame_flat_top(name: str, frame: int, height: int, color: str):
+    filename = f"{name}_{frame}"
 
-    fig = mlab.figure(bgcolor=white)
+    fig = start(filename)
 
     x, y, z_bottom, z_top = all_flat_top_from_bottom(
         level=height, squash_factor=squash
@@ -64,15 +71,55 @@ def sync_async_frame_1_and_2(name: str, height: int, color: str):
 
     set_scene()
 
-    save_clear(f"{name}_{height+1}")
+    save_clear(filename)
 
 
 def sync_async_frame_1(name: str):
-    sync_async_frame_1_and_2(name, 0, white)
+    sync_async_frame_flat_top(name, 1, 0, white)
 
 
 def sync_async_frame_2(name: str):
-    sync_async_frame_1_and_2(name, 1, green)
+    sync_async_frame_flat_top(name, 2, 1, green)
+
+
+def sync_async_split_colors(
+    name: str, frame: int, distance: int, level: int, red_green_same_level: bool
+):
+    filename = f"{name}_{frame}"
+
+    fig = start(filename)
+
+    x, y, z_bottom, z_top = manhattan_distance_less_equal(
+        distance, level, squash_factor=squash
+    )
+    bar = mlab.barchart(x, y, z_bottom, z_top, color=red, figure=fig)
+    set_line_width(bar)
+    second_level = level if red_green_same_level else level + 1
+    x, y, z_bottom, z_top = manhattan_distance_greater(
+        distance, second_level, squash_factor=squash
+    )
+    bar = mlab.barchart(x, y, z_bottom, z_top, color=green, figure=fig)
+    set_line_width(bar)
+
+    set_scene()
+
+    save_clear(filename)
+
+
+def sync_async_frame_3(name: str):
+    sync_async_split_colors(
+        name=name, frame=3, distance=0, level=1, red_green_same_level=True
+    )
+
+
+def sync_frame_4():
+    sync_async_frame_flat_top("sync", 4, 1, red)
+
+
+def async_frame_4():
+    sync_async_split_colors(
+        name="async", frame=4, distance=0, level=1, red_green_same_level=False
+    )
 
 
 # For some reason the first image doesn't render properly so we put a dummy
@@ -82,3 +129,7 @@ sync_async_frame_1("async")
 sync_async_frame_1("sync")
 sync_async_frame_2("async")
 sync_async_frame_2("sync")
+sync_async_frame_3("async")
+sync_async_frame_3("sync")
+sync_frame_4()
+async_frame_4()
