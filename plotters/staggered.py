@@ -15,7 +15,8 @@ colors_hex = [
     "64b5cd",
 ]
 colors_rgb = [
-    tuple(np.array(ImageColor.getcolor(f"#{c}", "RGB")) / 256) for c in colors_hex
+    tuple(np.array(ImageColor.getcolor(f"#{c}", "RGB")) / 256)
+    for c in colors_hex
 ]
 
 # Useful individual colors
@@ -51,7 +52,9 @@ def all_flat_top_from_bottom(level: int, squash_factor=global_squash_factor):
     return all_x, all_y, z_bottom, z_top
 
 
-def staggered_height_from_bottom(level: int, squash_factor=global_squash_factor):
+def staggered_height_from_bottom(
+    level: int, squash_factor=global_squash_factor
+):
     assert level > bottom, f"Level {level} must be greater than bottom {bottom}"
 
     z_bottom = np.full_like(all_x, bottom)
@@ -61,7 +64,12 @@ def staggered_height_from_bottom(level: int, squash_factor=global_squash_factor)
         if z > level:
             z_top[i] = level
 
-    return all_x.copy(), all_y.copy(), squash_factor * z_bottom, squash_factor * z_top
+    return (
+        all_x.copy(),
+        all_y.copy(),
+        squash_factor * z_bottom,
+        squash_factor * z_top,
+    )
 
 
 def filter_negative_one(input_list):
@@ -104,7 +112,9 @@ def check_equal(x0, y0, z_bottom0, z_top0, x1, y1, z_bottom1, z_top1, level):
     npt.assert_array_equal(
         z_bottom0, z_bottom1, err_msg=f"z_bottom not equal, level={level}"
     )
-    npt.assert_array_equal(z_top0, z_top1, err_msg=f"z_top not equal, level={level}")
+    npt.assert_array_equal(
+        z_top0, z_top1, err_msg=f"z_top not equal, level={level}"
+    )
 
 
 def test_staggered():
@@ -113,10 +123,16 @@ def test_staggered():
 
     for level in levels:
         for squash in squashes:
-            x0, y0, z_bottom0, z_top0 = staggered_height_from_bottom(level, squash)
-            x1, y1, z_bottom1, z_top1 = staggered_height_from(bottom, level, squash)
+            x0, y0, z_bottom0, z_top0 = staggered_height_from_bottom(
+                level, squash
+            )
+            x1, y1, z_bottom1, z_top1 = staggered_height_from(
+                bottom, level, squash
+            )
 
-            check_equal(x0, y0, z_bottom0, z_top0, x1, y1, z_bottom1, z_top1, level)
+            check_equal(
+                x0, y0, z_bottom0, z_top0, x1, y1, z_bottom1, z_top1, level
+            )
 
     new_bottom = 1
     level = 2
@@ -240,7 +256,9 @@ def test_manhattan():
 
     check_equal(x0, y0, z_bottom0, z_top0, x1, y1, z_bottom1, z_top1, level)
 
-    x0, y0, z_bottom0, z_top0 = manhattan_distance_less_equal(distance, level, squash)
+    x0, y0, z_bottom0, z_top0 = manhattan_distance_less_equal(
+        distance, level, squash
+    )
     x1 = np.array([0, 0, 0, 1, 1, 2])
     y1 = np.array([0, 1, 2, 0, 1, 0])
     z_bottom1 = np.full_like(x1, bottom)
@@ -248,7 +266,9 @@ def test_manhattan():
 
     check_equal(x0, y0, z_bottom0, z_top0, x1, y1, z_bottom1, z_top1, level)
 
-    x0, y0, z_bottom0, z_top0 = manhattan_distance_greater(distance, level, squash)
+    x0, y0, z_bottom0, z_top0 = manhattan_distance_greater(
+        distance, level, squash
+    )
     x1 = np.array([1, 2, 2])
     y1 = np.array([2, 1, 2])
     z_bottom1 = np.full_like(x1, bottom)
