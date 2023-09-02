@@ -16,10 +16,13 @@ def set_scene():
     mlab.view(azimuth=-135, elevation=65, distance=10, focalpoint=focalpoint)
 
 
-def start(filename: str):
+def start(name: str, frame: int):
+    filename = f"{name}_{frame:02}"
     print(f"Rendering {filename} ... ", end="")
 
-    return mlab.figure(bgcolor=white)
+    fig = mlab.figure(bgcolor=white)
+
+    return fig, filename
 
 
 def save(image_name: str, do_print=True):
@@ -58,9 +61,7 @@ def test_off_screen_render():
 
 
 def sync_async_frame_flat_top(name: str, frame: int, height: int, color: str):
-    filename = f"{name}_{frame}"
-
-    fig = start(filename)
+    fig, filename = start(name, frame)
 
     x, y, z_bottom, z_top = all_flat_top_from_bottom(
         level=height, squash_factor=squash
@@ -85,9 +86,7 @@ def sync_async_frame_2(name: str):
 def sync_async_split_colors(
     name: str, frame: int, distance: int, level: int, red_green_same_level: bool
 ):
-    filename = f"{name}_{frame}"
-
-    fig = start(filename)
+    fig, filename = start(name, frame)
 
     x, y, z_bottom, z_top = manhattan_distance_less_equal(
         distance, level, squash_factor=squash
@@ -159,9 +158,7 @@ def async_frame_10():
 
 
 def async_frame_11():
-    filename = "async_11"
-
-    fig = start(filename)
+    fig, filename = start("async", 11)
 
     x, y, z_bottom, z_top = staggered_height_from_bottom(level=5, squash_factor=squash)
 
