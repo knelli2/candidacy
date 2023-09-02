@@ -44,9 +44,9 @@ def set_line_width(bar):
     bar.actor.property.line_width = 6.0
 
 
-def all_flat_top_from_bottom(top: int, squash_factor=global_squash_factor):
+def all_flat_top_from_bottom(level: int, squash_factor=global_squash_factor):
     z_bottom = squash_factor * np.full_like(all_x, bottom)
-    z_top = squash_factor * np.full_like(all_x, top)
+    z_top = squash_factor * np.full_like(all_x, level)
 
     return all_x, all_y, z_bottom, z_top
 
