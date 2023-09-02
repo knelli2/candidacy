@@ -122,14 +122,76 @@ def async_frame_4():
     )
 
 
+def async_frame_5():
+    sync_async_split_colors(
+        name="async", frame=5, distance=1, level=2, red_green_same_level=True
+    )
+
+
+def async_frame_6():
+    sync_async_split_colors(
+        name="async", frame=6, distance=1, level=2, red_green_same_level=False
+    )
+
+
+def async_frame_7():
+    sync_async_split_colors(
+        name="async", frame=7, distance=2, level=3, red_green_same_level=True
+    )
+
+
+def async_frame_8():
+    sync_async_split_colors(
+        name="async", frame=8, distance=2, level=3, red_green_same_level=False
+    )
+
+
+def async_frame_9():
+    sync_async_split_colors(
+        name="async", frame=9, distance=3, level=4, red_green_same_level=True
+    )
+
+
+def async_frame_10():
+    sync_async_split_colors(
+        name="async", frame=10, distance=3, level=4, red_green_same_level=False
+    )
+
+
+def async_frame_11():
+    filename = "async_11"
+
+    fig = start(filename)
+
+    x, y, z_bottom, z_top = staggered_height_from_bottom(level=5, squash_factor=squash)
+
+    bar = mlab.barchart(x, y, z_bottom, z_top, color=red, figure=fig)
+    set_line_width(bar)
+
+    set_scene()
+
+    save_clear(filename)
+
+
 # For some reason the first image doesn't render properly so we put a dummy
 # image here instead
 test_off_screen_render()
+
+# Async
 sync_async_frame_1("async")
-sync_async_frame_1("sync")
 sync_async_frame_2("async")
-sync_async_frame_2("sync")
 sync_async_frame_3("async")
+async_frame_4()
+async_frame_5()
+async_frame_6()
+async_frame_7()
+async_frame_8()
+async_frame_9()
+async_frame_10()
+async_frame_11()
+
+# Sync
+sync_async_frame_1("sync")
+sync_async_frame_2("sync")
 sync_async_frame_3("sync")
 sync_frame_4()
-async_frame_4()
