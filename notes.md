@@ -20,5 +20,5 @@ Need the following frames for asynchronous stepping:
 Need following frames for meshes:
 
 1. Single large mesh ![](images/together.png)
-2. Exploded 9 meshes no numbers
-3. Exploded 9 meshes with numbers ![](images/exploded.png)
+2. Exploded 9 meshes no numbers ![](images/exploded_no_numbers.png)
+3. Exploded 9 meshes with numbers ![](images/exploded_with_numbers.png)
