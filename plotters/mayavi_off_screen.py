@@ -111,14 +111,31 @@ def sync_async_frame_3(name: str):
     )
 
 
-def sync_frame_4():
-    plot_flat_top("sync", 4, 1, red)
-
-
-def async_frame_4():
+def sync_async_frame_4(name: str):
     sync_async_split_colors(
-        name="async", frame=4, distance=0, level=1, red_green_same_level=False
+        name=name, frame=4, distance=0, level=1, red_green_same_level=False
     )
+
+
+def plot_staggered(
+    name: str, frame: int, level: int, color: tuple, size: tuple = image_size
+):
+    fig, filename = start(name, frame)
+
+    x, y, z_bottom, z_top = staggered_height_from_bottom(
+        level=level, squash_factor=squash
+    )
+
+    bar = mlab.barchart(x, y, z_bottom, z_top, color=color, figure=fig)
+    set_line_width(bar)
+
+    set_scene()
+
+    save_clear(filename, size=size)
+
+
+def sync_frame_5():
+    plot_staggered(name="sync", frame=5, level=2, color=red)
 
 
 def async_frame_5():
@@ -155,23 +172,6 @@ def async_frame_10():
     sync_async_split_colors(
         name="async", frame=10, distance=3, level=4, red_green_same_level=False
     )
-
-
-def plot_staggered(
-    name: str, frame: int, level: int, color: tuple, size: tuple = image_size
-):
-    fig, filename = start(name, frame)
-
-    x, y, z_bottom, z_top = staggered_height_from_bottom(
-        level=level, squash_factor=squash
-    )
-
-    bar = mlab.barchart(x, y, z_bottom, z_top, color=color, figure=fig)
-    set_line_width(bar)
-
-    set_scene()
-
-    save_clear(filename, size=size)
 
 
 def async_frame_11():
@@ -332,6 +332,15 @@ def global_state_frame_9():
 # image here instead
 test_off_screen_render()
 
+# Sync
+sync_async_frame_1("sync")
+sync_async_frame_2("sync")
+sync_async_frame_3("sync")
+sync_async_frame_4("sync")
+sync_frame_5()
+
+exit()
+
 # Global state
 global_state_frame_1()
 global_state_frame_2()
@@ -343,13 +352,11 @@ global_state_frame_7()
 global_state_frame_8()
 global_state_frame_9()
 
-exit()
-
 # Async
 sync_async_frame_1("async")
 sync_async_frame_2("async")
 sync_async_frame_3("async")
-async_frame_4()
+sync_async_frame_4("async")
 async_frame_5()
 async_frame_6()
 async_frame_7()
@@ -357,9 +364,3 @@ async_frame_8()
 async_frame_9()
 async_frame_10()
 async_frame_11()
-
-# Sync
-sync_async_frame_1("sync")
-sync_async_frame_2("sync")
-sync_async_frame_3("sync")
-sync_frame_4()

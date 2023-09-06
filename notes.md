@@ -3,7 +3,8 @@
 1. Level 0, all white ![](images/sync_01.png =200x200)
 2. Level 1, all green ![](images/sync_02.png =200x200)
 3. Level 1, element 9 red, rest green ![](images/sync_03.png =200x200)
-4. Level 1, all red ![](images/sync_04.png =200x200)
+4. Element 9 red level 1, rest green level 2 ![](images/sync_04.png =200x200)
+5. Level 2 staggered, all red ![](images/sync_05.png =200x200)
 
 ## Need the following frames for asynchronous stepping:
 
