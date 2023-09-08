@@ -181,11 +181,13 @@ def async_frame_11():
 global_state_size = (1200, 1000)
 
 
-def plot_global_state_bar_no_save(fig, height: int, color: tuple):
+def plot_global_state_bar_no_save(
+    fig, plot_bottom: int, plot_top: int, color: tuple
+):
     x = np.array([-1.25])
     y = np.array([1.0])
-    z_bottom = np.array([0.0])
-    z_top = squash * np.array([height])
+    z_bottom = squash * np.array([plot_bottom])
+    z_top = squash * np.array([plot_top])
     bar = mlab.barchart(x, y, z_bottom, z_top, color=color, figure=fig)
     set_line_width(bar)
 
@@ -193,8 +195,8 @@ def plot_global_state_bar_no_save(fig, height: int, color: tuple):
 def plot_staggered_with_global_state(
     frame: int,
     level: int,
-    global_state_height: int,
-    global_state_color: tuple,
+    global_state_heights: list,
+    global_state_colors: list,
 ):
     fig, filename = start("global_state", frame)
 
@@ -205,9 +207,17 @@ def plot_staggered_with_global_state(
     bar = mlab.barchart(x, y, z_bottom, z_top, color=green, figure=fig)
     set_line_width(bar)
 
-    plot_global_state_bar_no_save(
-        fig, height=global_state_height, color=global_state_color
-    )
+    local_bottom = bottom
+    for top, global_state_color in zip(
+        global_state_heights, global_state_colors
+    ):
+        plot_global_state_bar_no_save(
+            fig,
+            plot_bottom=local_bottom,
+            plot_top=top,
+            color=global_state_color,
+        )
+        local_bottom = top
 
     set_scene()
 
@@ -218,8 +228,8 @@ def plot_flat_top_with_global_state(
     frame: int,
     height: int,
     color: tuple,
-    global_state_height: int,
-    global_state_color: tuple,
+    global_state_heights: list,
+    global_state_colors: list,
 ):
     fig, filename = start("global_state", frame)
 
@@ -230,9 +240,17 @@ def plot_flat_top_with_global_state(
     bar = mlab.barchart(x, y, z_bottom, z_top, color=color, figure=fig)
     set_line_width(bar)
 
-    plot_global_state_bar_no_save(
-        fig, height=global_state_height, color=global_state_color
-    )
+    local_bottom = bottom
+    for top, global_state_color in zip(
+        global_state_heights, global_state_colors
+    ):
+        plot_global_state_bar_no_save(
+            fig,
+            plot_bottom=local_bottom,
+            plot_top=top,
+            color=global_state_color,
+        )
+        local_bottom = top
 
     set_scene()
 
@@ -244,8 +262,8 @@ def global_state_frame_1():
         frame=1,
         height=2,
         color=green,
-        global_state_height=3,
-        global_state_color=purple,
+        global_state_heights=[3],
+        global_state_colors=[purple],
     )
 
 
@@ -254,8 +272,8 @@ def global_state_frame_2():
         frame=2,
         height=3,
         color=green,
-        global_state_height=3,
-        global_state_color=purple,
+        global_state_heights=[3],
+        global_state_colors=[purple],
     )
 
 
@@ -264,8 +282,8 @@ def global_state_frame_3():
         frame=3,
         height=3,
         color=red,
-        global_state_height=3,
-        global_state_color=purple,
+        global_state_heights=[3],
+        global_state_colors=[purple],
     )
 
 
@@ -274,8 +292,8 @@ def global_state_frame_4():
         frame=4,
         height=3,
         color=green,
-        global_state_height=6,
-        global_state_color=blue,
+        global_state_heights=[3, 3],
+        global_state_colors=[purple, blue],
     )
 
 
@@ -284,14 +302,14 @@ def global_state_frame_5():
         frame=5,
         height=4,
         color=green,
-        global_state_height=6,
-        global_state_color=blue,
+        global_state_heights=[3, 3],
+        global_state_colors=[purple, blue],
     )
 
 
 def global_state_frame_6():
     plot_staggered_with_global_state(
-        frame=6, level=5, global_state_height=3, global_state_color=purple
+        frame=6, level=5, global_state_heights=[3], global_state_colors=[purple]
     )
 
 
@@ -309,7 +327,9 @@ def global_state_frame_7():
     bar = mlab.barchart(x, y, z_bottom, z_top, color=red, figure=fig)
     set_line_width(bar)
 
-    plot_global_state_bar_no_save(fig, height=3, color=purple)
+    plot_global_state_bar_no_save(
+        fig, plot_bottom=bottom, plot_top=3, color=purple
+    )
 
     set_scene()
 
@@ -318,28 +338,25 @@ def global_state_frame_7():
 
 def global_state_frame_8():
     plot_staggered_with_global_state(
-        frame=8, level=3, global_state_height=6, global_state_color=blue
+        frame=8,
+        level=3,
+        global_state_heights=[3, 3],
+        global_state_colors=[purple, blue],
     )
 
 
 def global_state_frame_9():
     plot_staggered_with_global_state(
-        frame=9, level=4, global_state_height=6, global_state_color=blue
+        frame=9,
+        level=4,
+        global_state_heights=[3, 3],
+        global_state_colors=[purple, blue],
     )
 
 
 # For some reason the first image doesn't render properly so we put a dummy
 # image here instead
 test_off_screen_render()
-
-# Sync
-sync_async_frame_1("sync")
-sync_async_frame_2("sync")
-sync_async_frame_3("sync")
-sync_async_frame_4("sync")
-sync_frame_5()
-
-exit()
 
 # Global state
 global_state_frame_1()
@@ -351,6 +368,15 @@ global_state_frame_6()
 global_state_frame_7()
 global_state_frame_8()
 global_state_frame_9()
+
+exit()
+
+# Sync
+sync_async_frame_1("sync")
+sync_async_frame_2("sync")
+sync_async_frame_3("sync")
+sync_async_frame_4("sync")
+sync_frame_5()
 
 # Async
 sync_async_frame_1("async")

@@ -22,6 +22,9 @@
 
 ## Need the following for global state
 
+Might need to change some of the global state images. Instead of having new
+global state be full blue bar, have blue bar stacked on top of purple bar.
+
 1. Green flat top level 2 with global state 3 ![](images/global_state_01.png =240x200)
 2. Green flat top level 3 with global state 3 ![](images/global_state_02.png =240x200)
 3. Red flat top level 3 with global state 3 ![](images/global_state_03.png =240x200)
